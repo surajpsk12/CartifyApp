@@ -18,14 +18,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.model.Category
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(){
+fun HomeScreen(
+    navController: NavController,
+    onProfileClick : ()-> Unit,
+    onCartClick : ()-> Unit
+){
     Scaffold(
-        topBar = {MyTopAppBar()},
+        topBar = {MyTopAppBar(onProfileClick,onCartClick)},
         bottomBar = {BottonNavigationBar()}
     ) {paddingValues ->
 
@@ -54,7 +59,7 @@ fun HomeScreen(){
             SectionTitle(
                 "Categories",
                 "See all"
-            ) { /* add naivgation */}
+            ) { navController.navigate("Categories")}
 
             Spacer(Modifier.height(16.dp))
 
@@ -92,7 +97,7 @@ fun HomeScreen(){
             SectionTitle(
                 title = "Featured",
                 actionText = "See all",
-            ) { /* add naivgation */ }
+            ) { /* add navigation */ }
 
 
             val productList : List<Product> = listOf(

@@ -1,6 +1,5 @@
 package com.surajvanshsv.cartify_ecomemerceapp.screens.home
 
-import android.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -17,7 +16,10 @@ import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar() {
+fun MyTopAppBar(
+    onProfileClick: () -> Unit,
+    onCartClick: () -> Unit
+) {
     TopAppBar( // top app bar
         title = { Text( // title of  top app bar
             text = "Cartify",
@@ -31,7 +33,7 @@ fun MyTopAppBar() {
             titleContentColor = Color.White
         ),
         actions = { // buttons of top app bar
-            IconButton(onClick = {}) {
+            IconButton(onClick = {onCartClick()}) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCart,
                     contentDescription = "Cart",
@@ -39,7 +41,7 @@ fun MyTopAppBar() {
                 )
 
             }
-            IconButton(onClick = {}){
+            IconButton(onClick = {onProfileClick()}){
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "Profile",
