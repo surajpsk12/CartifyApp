@@ -13,7 +13,9 @@ import com.surajvanshsv.cartify_ecomemerceapp.screens.home.HomeScreen
 import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
 import com.surajvanshsv.cartify_ecomemerceapp.screens.products.ProductDetailsScreen
 import com.surajvanshsv.cartify_ecomemerceapp.screens.products.ProductScreen
+import com.surajvanshsv.cartify_ecomemerceapp.screens.profile.LoginScreen
 import com.surajvanshsv.cartify_ecomemerceapp.screens.profile.ProfileScreen
+import com.surajvanshsv.cartify_ecomemerceapp.screens.profile.SignUpScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +83,31 @@ class MainActivity : ComponentActivity() {
                 composable(Screens.CategoryList.route) {
                     // show the category list screen
                     // add the logic here
+                    CategoryScreen(navController)
+                }
+
+                composable(Screens.SignUp.route) {
+                    // show the sign up screen
+                    // add the logic here
+                    SignUpScreen(
+                        onNavigateToLogin = {
+                            navController.navigate(Screens.Login.route)
+                        },
+                        onSignUpSuccess = {
+                            navController.navigate(Screens.Home.route)
+                        }
+                    )
+
+                }
+                composable(Screens.Login.route) {
+                    LoginScreen(
+                            onLoginSuccess = {
+                            navController.navigate(Screens.Home.route)
+                        },
+                        onNavigateToSignUp = {
+                            navController.navigate(Screens.SignUp.route)
+                        }
+                    )
                 }
 
 
