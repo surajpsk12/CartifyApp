@@ -16,7 +16,9 @@ import com.surajvanshsv.cartify_ecomemerceapp.screens.products.ProductScreen
 import com.surajvanshsv.cartify_ecomemerceapp.screens.profile.LoginScreen
 import com.surajvanshsv.cartify_ecomemerceapp.screens.profile.ProfileScreen
 import com.surajvanshsv.cartify_ecomemerceapp.screens.profile.SignUpScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

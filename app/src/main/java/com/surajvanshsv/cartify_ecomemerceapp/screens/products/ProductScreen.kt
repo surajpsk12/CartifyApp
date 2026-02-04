@@ -9,24 +9,33 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
 import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
 
 @Composable
 fun ProductScreen(
     categoryId : String,
-    navController: NavController
+    navController: NavController,
+    productViewModel: ProductViewModel = hiltViewModel()
 ){
 
     // fetch products from view model
-    // dummy products
-    val products : List<Product> = listOf(
-        Product("1","Smartphone",99.99,"https://www.livemint.com/lm-img/img/2023/10/13/1600x900/smartphones_1697191534268_1697191552490.jpg"),
-        Product("2","Laptop",1299.99,"https://images.indianexpress.com/2020/10/Asus-ROG.jpg?w=1200")
-    )
+    LaunchedEffect(categoryId) {
+        productViewModel.fetchProducts(categoryId)
+    }
+
+    // collect the products from view model
+    val  productState = productViewModel.products.collectAsState()
+    val products = productState.value
+
+
 
     // display the products
     Column(

@@ -19,7 +19,7 @@ class ProductDetailsViewModel @Inject constructor(
     private val _product = MutableStateFlow<Product?>(null)
     val product : StateFlow<Product?> get() = _product
 
-    fun fetchProduct(productId : String){
+    fun fetchProductDetails(productId : String){
         viewModelScope.launch {
             try {
                 val product = repository.getPrdouctsById(productId)

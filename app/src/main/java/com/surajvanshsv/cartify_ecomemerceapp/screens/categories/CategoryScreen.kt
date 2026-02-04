@@ -13,27 +13,30 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.model.Category
 import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CategoryViewModel
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductDetailsViewModel
 
 @Composable
 fun CategoryScreen(
     navController: NavController,
+    categoriesViewModel: CategoryViewModel = hiltViewModel()
 
 ){
-    // dummy data
-    val categories : List<Category> = listOf(
-        Category(
-            1,
-            "Electronic",
-            "https://thumbs.dreamstime.com/b/electronic-icon-circuit-177078270.jpg"
-        ),
-        Category(2,"Clothing","https://static.vecteezy.com/system/resources/previews/063/023/433/non_2x/change-clothes-icon-symbol-isolated-white-background-illustration-color-editable-vector.jpg"),
-        Category(3,"Mobile","https://cdn.vectorstock.com/i/1000v/03/94/smart-phone-mobile-icon-outline-in-black-vector-31300394.jpg"))
+
+    // data from view model
+
+    val categoriesState = categoriesViewModel.categories.collectAsState()
+    val categories = categoriesState.value
+
+    // display the categories
 
     Column(
 

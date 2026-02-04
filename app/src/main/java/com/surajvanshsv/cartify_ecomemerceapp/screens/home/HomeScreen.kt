@@ -13,21 +13,26 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.surajvanshsv.cartify_ecomemerceapp.model.Category
-import com.surajvanshsv.cartify_ecomemerceapp.model.Product
+import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CategoryViewModel
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     navController: NavController,
     onProfileClick : ()-> Unit,
-    onCartClick : ()-> Unit
+    onCartClick : ()-> Unit,
+    productViewModel : ProductViewModel = hiltViewModel(),
+    categoryViewModel : CategoryViewModel = hiltViewModel()
 ){
     Scaffold(
         topBar = {MyTopAppBar(onProfileClick,onCartClick)},
@@ -44,7 +49,7 @@ fun HomeScreen(
 
             SearchBar(
                 query = searchQuery.value,
-                onQueryChange = {searchQuery.value == it},
+                onQueryChange = {searchQuery.value = it},
                 onSearch = {
 //                    do the search logic
                 },
@@ -59,18 +64,17 @@ fun HomeScreen(
             SectionTitle(
                 "Categories",
                 "See all"
-            ) { navController.navigate("Categories")}
+            ) { navController.navigate(Screens.CategoryList.route)}
 
             Spacer(Modifier.height(16.dp))
 
 
 
             // mock the categories items
+            val categoriesState = categoryViewModel.categories.collectAsState()
+            val categories = categoriesState.value
 
-            val categories : List<Category> = listOf(
-                Category(1,"Electronic","https://thumbs.dreamstime.com/b/electronic-icon-circuit-177078270.jpg"),
-                Category(2,"Clothing","https://static.vecteezy.com/system/resources/previews/063/023/433/non_2x/change-clothes-icon-symbol-isolated-white-background-illustration-color-editable-vector.jpg"),
-                Category(3,"Mobile","https://cdn.vectorstock.com/i/1000v/03/94/smart-phone-mobile-icon-outline-in-black-vector-31300394.jpg"))
+
 
             val selectedCategory = remember { mutableStateOf(0) }
 
@@ -78,14 +82,17 @@ fun HomeScreen(
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ){
-                items(categories.size){
+                items(categories.size){ index ->
                     CategoryChip(
-                        icon = categories[it].iconUrl,
-                        text = categories[it].name,
-                        isSelected = selectedCategory.value == it,
+                        icon = categories[index].iconUrl,
+                        text = categories[index].name,
+                        isSelected = selectedCategory.value == index,
                         onClick = {
-                            selectedCategory.value == it
+                            selectedCategory.value = index
                             /* do the navigation logic here */
+                            navController.navigate(
+                                Screens.ProductList.createRoute(categoryId = categories[index].id.toString())
+                            )
                         }
                     )
                 }
@@ -97,22 +104,31 @@ fun HomeScreen(
             SectionTitle(
                 title = "Featured",
                 actionText = "See all",
-            ) { /* add navigation */ }
+            ) {
+                navController.navigate(Screens.CategoryList.route)
+            }
 
 
-            val productList : List<Product> = listOf(
-                Product("1","Smartphone",99.99,"https://www.livemint.com/lm-img/img/2023/10/13/1600x900/smartphones_1697191534268_1697191552490.jpg"),
-                Product("2","Laptop",1299.99,"https://images.indianexpress.com/2020/10/Asus-ROG.jpg?w=1200")
-            )
+           // fetch products when the screen is first displayed .
+            productViewModel.getAllProductsInFirestore()
+
+            // getting all products
+            val allProductsState = productViewModel.allProducts.collectAsState()
+            val allProductsFound = allProductsState.value
+
+
 
             LazyRow(
                 contentPadding = PaddingValues(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
 
             ) {
-                items(productList){product ->
+                items(allProductsFound){product ->
                     FeaturedProductCard(product) {
                         /*handle the click event  */
+                        navController.navigate(
+                            Screens.ProductDetails.createRoute(productId = product.id )
+                        )
                     }
 
                 }

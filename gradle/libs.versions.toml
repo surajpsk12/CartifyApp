@@ -1,6 +1,6 @@
 [versions]
 agp = "8.7.3"
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -10,7 +10,7 @@ activityCompose = "1.9.3"
 composeBom = "2024.11.00"
 googleServices = "4.4.2"
 hilt = "2.52"
-ksp = "2.0.21-1.0.26"
+ksp = "2.1.0-1.0.29"
 navigationCompose = "2.8.4"
 
 [libraries]

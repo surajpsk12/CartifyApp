@@ -2,6 +2,7 @@ package com.surajvanshsv.cartify_ecomemerceapp.screens.products
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,73 +18,98 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductDetailsViewModel
 
 @Composable
 fun ProductDetailsScreen(
-    productId : String
+    productId : String,
+    productViewModel : ProductDetailsViewModel = hiltViewModel()
 ){
 // fetch products details when screen is first displayed
     // collect the products details from the viewmodel
 
-    val myDummyProduct =Product("1","Smartphone",99.99,"https://www.livemint.com/lm-img/img/2023/10/13/1600x900/smartphones_1697191534268_1697191552490.jpg")
+    LaunchedEffect(productId) {
+        productViewModel.fetchProductDetails(productId)
+    }
 
-    if(myDummyProduct == null){
+    val productState = productViewModel.product.collectAsState()
+    val product = productState.value
+
+    // display the product details
+    
+    if(product == null){
         Text(
             text = "Product not found"
         )
     } else {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
-        ) {
-            Image(
-                painter = rememberAsyncImagePainter(myDummyProduct.imageUrl),
-                contentDescription = myDummyProduct.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxWidth()
-                    .height(300.dp)
-                    .clip(RoundedCornerShape(12.dp))
-            )
+        Box {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(product.imageUrl),
+                    contentDescription = product.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // product name and price
-            Text(
-                text = myDummyProduct.name,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+                // product name and price
+                Text(
+                    text = product.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "$${myDummyProduct.price}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.primary
-            )
+                Text(
+                    text = "$${product.price}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // product description
-            Text(
-                text = myDummyProduct.categoryId?: "No Description Available",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold
-            )
+                // product description
+                Text(
+                    text = product.categoryId ?: "No Description Available",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold
+                )
 
+
+
+            }
             IconButton(
                 onClick = { /* add to cart logic */ },
-                modifier = Modifier.padding(16.dp)
-                    .background(color = MaterialTheme.colorScheme.primary,
-                shape = CircleShape)
+                modifier = Modifier
+                    .padding(top = 42.dp , end = 16.dp)
+                    .align(Alignment.TopEnd)
+                    .clip(CircleShape)
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    )
             ) {
                 Icon(
                     imageVector = Icons.Default.ShoppingCart,
@@ -92,7 +118,6 @@ fun ProductDetailsScreen(
                 )
 
             }
-
         }
     }
 
