@@ -33,14 +33,15 @@ class MainActivity : ComponentActivity() {
                 // defines routes using composable
                 // for each screen you want to supports
 
+
                 composable("home"){
                     HomeScreen(
                         navController = navController,
                         onProfileClick = {
-                            navController.navigate(Screens.Home)
+                            navController.navigate(Screens.Home.route)
                         },
                         onCartClick = {
-                            navController.navigate(Screens.Cart)
+                            navController.navigate(Screens.Cart.route)
                         }
                     )
                 }

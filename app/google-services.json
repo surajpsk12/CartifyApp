@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "963189270324",
+    "project_id": "cartify-c0b72",
+    "storage_bucket": "cartify-c0b72.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963189270324:android:460a081767f7b2c09da761",
+        "android_client_info": {
+          "package_name": "com.surajvanshsv.cartify_ecomemerceapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBtu8BsT4EULc4kFR6bJ3R4xadMGcwNtg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

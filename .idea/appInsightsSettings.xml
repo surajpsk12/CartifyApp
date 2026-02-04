@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.surajvanshsv.cartify_ecomemerceapp" />
+                  <option name="mobileSdkAppId" value="1:963189270324:android:460a081767f7b2c09da761" />
+                  <option name="projectId" value="cartify-c0b72" />
+                  <option name="projectNumber" value="963189270324" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
