@@ -30,12 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CartViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductDetailsViewModel
 
 @Composable
 fun ProductDetailsScreen(
     productId : String,
-    productViewModel : ProductDetailsViewModel = hiltViewModel()
+    productViewModel : ProductDetailsViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ){
 // fetch products details when screen is first displayed
     // collect the products details from the viewmodel
@@ -101,7 +103,9 @@ fun ProductDetailsScreen(
 
             }
             IconButton(
-                onClick = { /* add to cart logic */ },
+                onClick = { /* add to cart logic */
+                    cartViewModel.addToCart(product)
+                },
                 modifier = Modifier
                     .padding(top = 42.dp , end = 16.dp)
                     .align(Alignment.TopEnd)

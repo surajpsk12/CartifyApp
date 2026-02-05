@@ -14,21 +14,26 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CartViewModel
 
 @Composable
 fun CartScreen(
-    navController: NavController
+    navController: NavController,
+    cartViewModel: CartViewModel = hiltViewModel()
 ){
 
-    val cartItems = listOf(
-        Product("1","Smartphone",99.99,"https://www.livemint.com/lm-img/img/2023/10/13/1600x900/smartphones_1697191534268_1697191552490.jpg"),
-        )
+    val cartItemsState = cartViewModel.cartItems.collectAsState(initial = emptyList())
+    val cartItems = cartItemsState.value
+
+
 
 
     Column(
@@ -54,7 +59,9 @@ fun CartScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { /* Handle button click */ }
+                    onClick = { /* Handle button click */
+                    navController.popBackStack()
+                    }
                 ) {
                     Text(
                         text = "continue shopping"
@@ -70,7 +77,9 @@ fun CartScreen(
                 items(cartItems){ item ->
                     CartItemCard(
                         item,
-                        onRemoveItems = { /* Handle remove item */ }
+                        onRemoveItems = { /* Handle remove item */
+                            cartViewModel.removeFromCart(item)
+                        }
                     )
                 }
             }
@@ -94,7 +103,7 @@ fun CartScreen(
                 )
                 // call the viewmodel to get the total price .....
                 Text(
-                    text = "$...",
+                    text = "$${cartViewModel.calculateTotal(cartItems)}",
                     style = MaterialTheme.typography.titleMedium
                     , fontWeight = FontWeight.Bold
                 )
@@ -102,7 +111,7 @@ fun CartScreen(
 
                 Spacer(Modifier.height(16.dp))
                 Button(
-                    onClick = { /* Handle checkout */ },
+                    onClick = { /* Handle checkout here you can add paypall , paytm , upi or any other sdk */ },
                     modifier = Modifier.fillMaxWidth()
                         .height(50.dp)
                 ) {

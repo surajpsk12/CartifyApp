@@ -17,13 +17,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
 import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CartViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
 
 @Composable
 fun ProductScreen(
     categoryId : String,
     navController: NavController,
-    productViewModel: ProductViewModel = hiltViewModel()
+    productViewModel: ProductViewModel = hiltViewModel(),
+    cartViewModel: CartViewModel = hiltViewModel()
 ){
 
     // fetch products from view model
@@ -68,6 +70,7 @@ fun ProductScreen(
                         onAddToCart = {
                            // add to cart logic
                             // room database insertion function
+                            cartViewModel.addToCart(product)
                         }
                         )
 
