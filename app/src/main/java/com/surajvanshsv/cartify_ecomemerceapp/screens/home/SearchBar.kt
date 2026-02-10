@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,7 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -54,26 +57,52 @@ fun SearchBar( // search bar UI , this params is for text field logic and contro
     // focus requester so clicking anywhere on the bar focuses the text field
     val focusRequester = remember { FocusRequester() }
 
-    Box( // full container UI of search bar
-        modifier = modifier.height(50.dp)
-            .clip(RoundedCornerShape(25.dp))
-            .background(Color.LightGray.copy(alpha = 0.3f))
-            // request focus when clicked anywhere in the box
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(16.dp),
+                spotColor = Color.Black.copy(alpha = 0.1f)
+            )
             .clickable { focusRequester.requestFocus() },
-        contentAlignment = Alignment.CenterStart
-    ){
-        Row( // contains icons and text field
-            modifier=Modifier.fillMaxSize().padding(horizontal = 14.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(0.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
-            Icon(Icons.Default.Search,"search") // icon
-            Spacer(Modifier.width(8.dp))
-            TextField( // text field
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                tint = Color(0xFF757575),
+                modifier = Modifier.size(24.dp)
+            )
+
+            Spacer(Modifier.width(12.dp))
+
+            TextField(
                 value = query,
                 onValueChange = onQueryChange,
                 singleLine = true,
-                modifier=Modifier.fillMaxWidth().focusRequester(focusRequester),
-                placeholder = { Text("Search...", color = Color.Gray, fontSize = 16.sp) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
+                placeholder = {
+                    Text(
+                        "Search products...",
+                        color = Color(0xFFBDBDBD),
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Normal
+                    )
+                },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search
                 ),
@@ -81,68 +110,138 @@ fun SearchBar( // search bar UI , this params is for text field logic and contro
                     onSearch = { onSearch() }
                 ),
                 colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
+                    disabledIndicatorColor = Color.Transparent,
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121)
+                ),
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Normal
                 )
             )
-                }
-
         }
     }
-
+}
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun SearchResultsSection(
     navController: NavController,
     searchViewModel: SearchViewModel = hiltViewModel()
-){
+) {
     // remember the navController.currentBackStackEntry as key, then obtain the shared cart viewmodel scoped to the nav host
-    val cartBackStackEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry("root_graph") }
+    val cartBackStackEntry = remember(navController.currentBackStackEntry) {
+        navController.getBackStackEntry("root_graph")
+    }
     val cartViewModel: CartViewModel = hiltViewModel(cartBackStackEntry)
 
     val searchResults = searchViewModel.searchResults.value
     val isSearching = searchViewModel.isSearching.value
 
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = "Search Results",
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
-        )
-
-        if(isSearching){
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+    ) {
+        // Section Header
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Search Results",
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                ),
+                color = Color(0xFF212121)
             )
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(searchResults.size){
-                    index -> val product = searchResults[index]
-                    ProductItem(
-                        product = product,
-                        onClick = {navController.navigate(Screens.ProductDetails.createRoute(product.id))},
-                        onAddToCart = {cartViewModel.addToCart(product)}
-                    )
 
-                }
+            if (searchResults.isNotEmpty() && !isSearching) {
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "(${searchResults.size})",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color(0xFF757575)
+                )
             }
         }
 
+        if (isSearching) {
+            // Loading state
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(40.dp),
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 4.dp
+                )
+            }
+        } else if (searchResults.isEmpty()) {
+            // Empty state
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "No results",
+                        modifier = Modifier.size(64.dp),
+                        tint = Color(0xFFBDBDBD)
+                    )
 
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "No products found",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = Color(0xFF757575)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = "Try searching with different keywords",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFF9E9E9E)
+                    )
+                }
+            }
+        } else {
+            // Results list
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                items(searchResults.size) { index ->
+                    val product = searchResults[index]
+                    ProductItem(
+                        product = product,
+                        onClick = {
+                            navController.navigate(Screens.ProductDetails.createRoute(product.id))
+                        },
+                        onAddToCart = { cartViewModel.addToCart(product) }
+                    )
+                }
+            }
+        }
     }
-
-
-
 }

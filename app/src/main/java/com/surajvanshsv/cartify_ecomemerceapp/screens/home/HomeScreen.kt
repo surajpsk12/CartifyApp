@@ -1,6 +1,7 @@
 package com.surajvanshsv.cartify_ecomemerceapp.screens.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,12 +12,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,65 +34,68 @@ import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.SearchViewModel
 @Composable
 fun HomeScreen(
     navController: NavController,
-    onProfileClick : ()-> Unit,
-    onCartClick : ()-> Unit,
-    productViewModel : ProductViewModel = hiltViewModel(),
-    categoryViewModel : CategoryViewModel = hiltViewModel(),
+    onProfileClick: () -> Unit,
+    onCartClick: () -> Unit,
+    productViewModel: ProductViewModel = hiltViewModel(),
+    categoryViewModel: CategoryViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = hiltViewModel()
-){
+) {
     Scaffold(
-        topBar = {MyTopAppBar(onProfileClick,onCartClick)},
-        bottomBar = {BottonNavigationBar(navController)}
-    ) {paddingValues ->
+        topBar = { MyTopAppBar(onProfileClick, onCartClick) },
+        bottomBar = { BottonNavigationBar(navController) },
+        containerColor = Color(0xFFF8F9FA)
+    ) { paddingValues ->
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues)
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFF8F9FA))
+                .padding(paddingValues)
+                .verticalScroll(rememberScrollState())
         ) {
 
-            // search section
+            // Search section
             val searchQuery = remember { mutableStateOf("") }
             val focusManager = LocalFocusManager.current
 
             SearchBar(
                 query = searchQuery.value,
-                onQueryChange = {searchQuery.value = it},
+                onQueryChange = { searchQuery.value = it },
                 onSearch = {
                     searchViewModel.searchProducts(searchQuery.value)
                     focusManager.clearFocus()
                 },
-                modifier = Modifier.fillMaxWidth().padding(16.dp
-                )
-
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             )
 
-            // search result section
-            if(searchQuery.value.isNotBlank()){
+            // Search result section
+            if (searchQuery.value.isNotBlank()) {
                 SearchResultsSection(navController, searchViewModel)
             }
 
-            // categories section
+            Spacer(Modifier.height(8.dp))
+
+            // Categories section
             SectionTitle(
                 "Categories",
                 "See all"
-            ) { navController.navigate(Screens.CategoryList.route)}
+            ) { navController.navigate(Screens.CategoryList.route) }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(12.dp))
 
-
-
-            // mock the categories items
+            // Mock the categories items
             val categoriesState = categoryViewModel.categories.collectAsState()
             val categories = categoriesState.value
-
-
 
             val selectedCategory = remember { mutableStateOf(0) }
 
             LazyRow(
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ){
-                items(categories.size){ index ->
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(categories.size) { index ->
                     CategoryChip(
                         icon = categories[index].iconUrl,
                         text = categories[index].name,
@@ -102,48 +109,42 @@ fun HomeScreen(
                         }
                     )
                 }
-
             }
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(24.dp))
 
+            // Featured section
             SectionTitle(
-                title = "Featured",
-                actionText = "See all",
+                title = "Featured Products",
+                actionText = "See all"
             ) {
                 navController.navigate(Screens.CategoryList.route)
             }
 
+            Spacer(Modifier.height(12.dp))
 
-
-           // fetch products when the screen is first displayed .
+            // Fetch products when the screen is first displayed
             productViewModel.getAllProductsInFirestore()
 
-            // getting all products
+            // Getting all products
             val allProductsState = productViewModel.allProducts.collectAsState()
             val allProductsFound = allProductsState.value
 
-
-
             LazyRow(
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
-
             ) {
-                items(allProductsFound){product ->
+                items(allProductsFound) { product ->
                     FeaturedProductCard(product) {
                         /*handle the click event  */
                         navController.navigate(
-                            Screens.ProductDetails.createRoute(productId = product.id )
+                            Screens.ProductDetails.createRoute(productId = product.id)
                         )
                     }
-
                 }
-
             }
 
-
-
+            Spacer(Modifier.height(24.dp))
         }
     }
 }

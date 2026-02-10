@@ -8,28 +8,42 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun DiscountBadge(
-    discountPercentage : Int,
+    discountPercentage: Int,
     modifier: Modifier = Modifier
-){
+) {
 
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(Color(0xffe91e63))
-    ){
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(8.dp),
+                spotColor = Color(0xFFE91E63).copy(alpha = 0.4f)
+            )
+            .clip(RoundedCornerShape(8.dp))
+            .background(
+                brush = Brush.horizontalGradient(
+                    colors = listOf(
+                        Color(0xFFFF6090),
+                        Color(0xFFE91E63)
+                    )
+                )
+            )
+    ) {
         Text(
             text = "$discountPercentage% OFF",
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+            fontSize = 12.sp,
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
         )
     }
-
-
 }
