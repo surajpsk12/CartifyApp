@@ -18,22 +18,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.model.UserProfile
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.AuthViewModel
 
 @Composable
 fun ProfileScreen( // UI for the profile screen
     navController: NavController,
-    onSignOut : ()-> Unit
+    onSignOut : ()-> Unit,
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     // getting the current user
-    val currentUser = UserProfile("77", "James Bond", "james@bond.com")
+    val currentUser by remember { mutableStateOf(authViewModel.currentUser) }
+
 
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -62,7 +69,7 @@ fun ProfileScreen( // UI for the profile screen
 
         // User Name
         Text(
-            text = currentUser.name,
+            text = currentUser?.name.toString(),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -71,7 +78,7 @@ fun ProfileScreen( // UI for the profile screen
 
         // User Email
         Text(
-            text = currentUser.email,
+            text = currentUser?.email.toString(),
             style = MaterialTheme.typography.bodyMedium
         )
 

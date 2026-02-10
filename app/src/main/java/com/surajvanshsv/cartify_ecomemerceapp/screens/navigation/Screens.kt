@@ -6,7 +6,7 @@ sealed class Screens(val route : String ){
 
     object Home : Screens("home")
     object Cart : Screens("Cart")
-    object Profile : Screens("Profile")
+
     object Categories : Screens("Categories")
 
     object ProductDetails : Screens("product_details/{productId}"){
@@ -20,7 +20,9 @@ sealed class Screens(val route : String ){
 
     object CategoryList : Screens("category_list")
 
+    // these three are for login , signup and profile screens
     object Login : Screens("Login")
     object SignUp : Screens("SignUp")
+    object Profile : Screens("Profile")
 
 }

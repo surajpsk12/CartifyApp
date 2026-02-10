@@ -27,6 +27,8 @@ import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductDetailsViewModel
 @Composable
 fun CategoryScreen(
     navController: NavController,
+    onCartClick : ()-> Unit,
+    onProfileClick : ()-> Unit,
     categoriesViewModel: CategoryViewModel = hiltViewModel()
 
 ){

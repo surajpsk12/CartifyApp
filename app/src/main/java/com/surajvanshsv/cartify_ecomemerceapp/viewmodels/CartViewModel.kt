@@ -4,9 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
 import com.surajvanshsv.cartify_ecomemerceapp.repositories.CartRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class CartViewModel @Inject constructor(
     private val repository: CartRepository
 ) : ViewModel() {
@@ -36,4 +38,3 @@ class CartViewModel @Inject constructor(
 
 
 }
-

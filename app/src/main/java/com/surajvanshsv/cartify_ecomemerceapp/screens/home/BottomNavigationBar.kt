@@ -15,13 +15,19 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
 
 @Composable
-fun BottonNavigationBar() {
+fun BottonNavigationBar(
+    navController: NavController
+) {
 
     val currentRoute = ""
 
@@ -30,34 +36,36 @@ fun BottonNavigationBar() {
         BottomNavigationItem(
             title = "Home",
             icon = Icons.Default.Home,
-            route = "home"
+            route = Screens.Home.route
 
         ),
         BottomNavigationItem(
             title = "Categories",
             icon = Icons.Default.Search,
-            route = "categories"
+            route = Screens.Categories.route
+
 
         ),
 
         BottomNavigationItem(
             title = "Wishlist",
             icon = Icons.Default.Favorite,
-            route = "wishlist",
+            route = Screens.Cart.route,
             badgeCount = 5
 
         ),
         BottomNavigationItem(
             title = "Cart",
             icon = Icons.Default.ShoppingCart,
-            route = "cart",
+            route = Screens.Cart.route,
             badgeCount = 3
 
         ),
         BottomNavigationItem(
             title = "Profile",
             icon = Icons.Default.Person,
-            route = "profile"
+            route = Screens.Profile.route,
+
 
         )
 
@@ -68,6 +76,13 @@ fun BottonNavigationBar() {
         containerColor = Color.White,
         tonalElevation = 8.dp
     ) {
+
+        // converting the current nav back stack entry into a state object
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        // getting the route of the current destination
+        val currentRoute = navBackStackEntry?.destination?.route
+
+
         items.forEach { item ->
             NavigationBarItem(
                 icon = {
@@ -99,7 +114,16 @@ fun BottonNavigationBar() {
                 },
                 label = { Text(text = item.title) },
                 selected = currentRoute == item.route,
-                onClick = { /* Handle navigation here */ }
+                onClick = {
+                    navController.navigate(item.route){
+                        popUpTo(navController.graph.startDestinationId){
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                alwaysShowLabel = true
             )
 
         }

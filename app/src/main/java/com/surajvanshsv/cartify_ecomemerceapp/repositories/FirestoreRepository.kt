@@ -1,5 +1,6 @@
 package com.surajvanshsv.cartify_ecomemerceapp.repositories
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surajvanshsv.cartify_ecomemerceapp.model.Category
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
@@ -86,6 +87,32 @@ class FirestoreRepository @Inject constructor(
             emptyList()
         }
     }
+
+    suspend fun searchProducts(query: String): List<Product> {
+        return try {
+            // convert query to lowercase for case-insensitive search
+            val lowercaseQuery = query.lowercase()
+
+            // get all products and filter locally
+            val allProducts = firestore.collection("products")
+                .get()
+                .await()
+                .documents
+                .mapNotNull {
+                    it.toObject(Product::class.java)
+                }
+            allProducts.filter {product ->
+                product.name.lowercase().contains(lowercaseQuery)
+
+            }
+        } catch (e: Exception) {
+            Log.e("FirestoreRepository", "Error searching products: ${e.message}")
+            emptyList()
+        }
+
+
+    }
+
 
 
 

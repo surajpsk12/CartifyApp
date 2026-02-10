@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CategoryViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
+import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.SearchViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -32,11 +33,12 @@ fun HomeScreen(
     onProfileClick : ()-> Unit,
     onCartClick : ()-> Unit,
     productViewModel : ProductViewModel = hiltViewModel(),
-    categoryViewModel : CategoryViewModel = hiltViewModel()
+    categoryViewModel : CategoryViewModel = hiltViewModel(),
+    searchViewModel: SearchViewModel = hiltViewModel()
 ){
     Scaffold(
         topBar = {MyTopAppBar(onProfileClick,onCartClick)},
-        bottomBar = {BottonNavigationBar()}
+        bottomBar = {BottonNavigationBar(navController)}
     ) {paddingValues ->
 
         Column(
@@ -51,7 +53,8 @@ fun HomeScreen(
                 query = searchQuery.value,
                 onQueryChange = {searchQuery.value = it},
                 onSearch = {
-//                    do the search logic
+                    searchViewModel.searchProducts(searchQuery.value)
+                    focusManager.clearFocus()
                 },
                 modifier = Modifier.fillMaxWidth().padding(16.dp
                 )
@@ -59,6 +62,9 @@ fun HomeScreen(
             )
 
             // search result section
+            if(searchQuery.value.isNotBlank()){
+                SearchResultsSection(navController)
+            }
 
             // categories section
             SectionTitle(
