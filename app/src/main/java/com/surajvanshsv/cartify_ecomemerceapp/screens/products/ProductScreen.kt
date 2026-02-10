@@ -11,11 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.surajvanshsv.cartify_ecomemerceapp.model.Product
 import com.surajvanshsv.cartify_ecomemerceapp.screens.navigation.Screens
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CartViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
@@ -24,9 +24,12 @@ import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
 fun ProductScreen(
     categoryId : String,
     navController: NavController,
-    productViewModel: ProductViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    productViewModel: ProductViewModel = hiltViewModel()
 ){
+
+    // obtain the nav-graph scoped CartViewModel using a remembered back stack entry
+    val cartBackStackEntry = remember(navController) { navController.getBackStackEntry("root_graph") }
+    val cartViewModel: CartViewModel = hiltViewModel(cartBackStackEntry)
 
     // fetch products from view model
     LaunchedEffect(categoryId) {

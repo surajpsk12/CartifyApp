@@ -25,7 +25,7 @@ interface CartDao {
     fun getAllCartItems(): Flow<List<Product>>
 
     @Query("SELECT * FROM cart_items WHERE id = :productId")
-    fun getCartItemById(productId: String): Flow<Product?>
+    suspend fun getCartItemById(productId: String): Product?
 
     @Query("DELETE FROM cart_items")
     suspend fun clearCart()

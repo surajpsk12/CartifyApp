@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,16 +30,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.rememberAsyncImagePainter
-import com.surajvanshsv.cartify_ecomemerceapp.model.Product
+import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CartViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductDetailsViewModel
 
 @Composable
 fun ProductDetailsScreen(
     productId : String,
-    productViewModel : ProductDetailsViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    navController: NavController,
+    productViewModel : ProductDetailsViewModel = hiltViewModel()
 ){
+// obtain the shared cart viewmodel scoped to the nav host using a remembered backStackEntry
+    val cartBackStackEntry = remember(navController) { navController.getBackStackEntry("root_graph") }
+    val cartViewModel: CartViewModel = hiltViewModel(cartBackStackEntry)
+
 // fetch products details when screen is first displayed
     // collect the products details from the viewmodel
 

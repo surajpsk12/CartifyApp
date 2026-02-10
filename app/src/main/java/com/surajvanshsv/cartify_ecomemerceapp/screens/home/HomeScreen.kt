@@ -63,7 +63,7 @@ fun HomeScreen(
 
             // search result section
             if(searchQuery.value.isNotBlank()){
-                SearchResultsSection(navController)
+                SearchResultsSection(navController, searchViewModel)
             }
 
             // categories section
@@ -113,6 +113,7 @@ fun HomeScreen(
             ) {
                 navController.navigate(Screens.CategoryList.route)
             }
+
 
 
            // fetch products when the screen is first displayed .

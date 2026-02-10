@@ -44,11 +44,11 @@ class MainActivity : ComponentActivity() {
 
 
 
-
             // Nav Host : manages navigation btw screens and their transitions
             NavHost(
                 navController = navController,
-                startDestination = "home"
+                startDestination = "home",
+                route = "root_graph"
             ){
                 // defines routes using composable
                 // for each screen you want to supports
@@ -97,7 +97,7 @@ class MainActivity : ComponentActivity() {
                     val productId = it.arguments?.getString("productId")
                     if(productId != null){
                         // show the product details screen
-                        ProductDetailsScreen(productId)
+                        ProductDetailsScreen(productId, navController)
                     }
                 }
 

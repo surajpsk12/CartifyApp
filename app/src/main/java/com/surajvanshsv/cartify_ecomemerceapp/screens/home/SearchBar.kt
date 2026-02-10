@@ -2,6 +2,7 @@ package com.surajvanshsv.cartify_ecomemerceapp.screens.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,9 +26,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -47,23 +51,28 @@ fun SearchBar( // search bar UI , this params is for text field logic and contro
     onSearch: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // focus requester so clicking anywhere on the bar focuses the text field
+    val focusRequester = remember { FocusRequester() }
+
     Box( // full container UI of search bar
         modifier = modifier.height(50.dp)
             .clip(RoundedCornerShape(25.dp))
-            .background(Color.LightGray.copy(alpha = 0.3f)),
+            .background(Color.LightGray.copy(alpha = 0.3f))
+            // request focus when clicked anywhere in the box
+            .clickable { focusRequester.requestFocus() },
         contentAlignment = Alignment.CenterStart
     ){
         Row( // contains icons and text field
-            modifier=modifier.fillMaxSize().padding(horizontal = 14.dp),
+            modifier=Modifier.fillMaxSize().padding(horizontal = 14.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
             Icon(Icons.Default.Search,"search") // icon
-            Spacer(modifier.width(8.dp))
+            Spacer(Modifier.width(8.dp))
             TextField( // text field
                 value = query,
                 onValueChange = onQueryChange,
                 singleLine = true,
-                modifier=modifier.fillMaxWidth(),
+                modifier=Modifier.fillMaxWidth().focusRequester(focusRequester),
                 placeholder = { Text("Search...", color = Color.Gray, fontSize = 16.sp) },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Search
@@ -90,9 +99,12 @@ fun SearchBar( // search bar UI , this params is for text field logic and contro
 @Composable
 fun SearchResultsSection(
     navController: NavController,
-    searchViewModel: SearchViewModel = hiltViewModel(),
-    cartViewModel: CartViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel()
 ){
+    // remember the navController.currentBackStackEntry as key, then obtain the shared cart viewmodel scoped to the nav host
+    val cartBackStackEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry("root_graph") }
+    val cartViewModel: CartViewModel = hiltViewModel(cartBackStackEntry)
+
     val searchResults = searchViewModel.searchResults.value
     val isSearching = searchViewModel.isSearching.value
 
@@ -130,7 +142,6 @@ fun SearchResultsSection(
 
 
     }
-
 
 
 
