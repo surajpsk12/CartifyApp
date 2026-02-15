@@ -45,7 +45,9 @@ fun ProductScreen(
 ){
 
     // obtain the nav-graph scoped CartViewModel using a remembered back stack entry
-    val cartBackStackEntry = remember(navController) { navController.getBackStackEntry("root_graph") }
+    val cartBackStackEntry = remember(navController) {
+        navController.getBackStackEntry("root_graph")
+    }
     val cartViewModel: CartViewModel = hiltViewModel(cartBackStackEntry)
 
     // fetch products from view model
@@ -80,7 +82,8 @@ fun ProductScreen(
                         text = categoryName,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.White,
+                        modifier = Modifier.padding(24.dp)
                     )
                 },
                 navigationIcon = {
@@ -160,7 +163,7 @@ fun ProductScreen(
                         },
                         onAddToCart = {
                             // add to cart logic
-                            // room database insertion function
+                            // room database insertion function from viewmodel
                             cartViewModel.addToCart(product)
                         }
                     )

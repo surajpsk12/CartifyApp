@@ -1,5 +1,6 @@
 package com.surajvanshsv.cartify_ecomemerceapp.screens.products
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -46,6 +47,7 @@ import androidx.navigation.NavController
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CartViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductDetailsViewModel
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun ProductDetailsScreen(
     productId: String,

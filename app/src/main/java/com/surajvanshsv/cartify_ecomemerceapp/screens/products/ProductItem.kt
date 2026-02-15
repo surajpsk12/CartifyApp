@@ -1,5 +1,6 @@
 package com.surajvanshsv.cartify_ecomemerceapp.screens.products
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.surajvanshsv.cartify_ecomemerceapp.model.Product
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun ProductItem(
     product: Product,

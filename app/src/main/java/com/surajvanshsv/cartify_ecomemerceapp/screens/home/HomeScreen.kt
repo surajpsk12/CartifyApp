@@ -30,6 +30,21 @@ import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.CategoryViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.ProductViewModel
 import com.surajvanshsv.cartify_ecomemerceapp.viewmodels.SearchViewModel
 
+/**
+ * The primary dashboard of the application, providing users with access to product searching,
+ * category browsing, and featured product listings.
+ *
+ * This screen serves as the main entry point after login, integrating various view models
+ * to display dynamic content from Firestore.
+ *
+ * @param navController The [NavController] used to handle navigation to other screens like
+ * Product Details, Category Lists, and Search Results.
+ * @param onProfileClick Lambda function triggered when the profile icon in the top bar is clicked.
+ * @param onCartClick Lambda function triggered when the shopping cart icon in the top bar is clicked.
+ * @param productViewModel The ViewModel responsible for fetching and managing product data.
+ * @param categoryViewModel The ViewModel responsible for fetching and managing category data.
+ * @param searchViewModel The ViewModel responsible for handling product search queries and results.
+ */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
@@ -85,7 +100,7 @@ fun HomeScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            // Mock the categories items
+            //  the categories items // chips
             val categoriesState = categoryViewModel.categories.collectAsState()
             val categories = categoriesState.value
 
